@@ -31,7 +31,8 @@ class CatImageController {
     try {
       const client = await pool.connect();
       const { id } = req.params;
-      const { rows }  = await client.query(getCatImageById, [id]);
+      const { user_id } = req.user;
+      const { rows }  = await client.query(getCatImageById, [id, user_id]);
       const [ image ] = rows;
       client.release();
 
@@ -59,9 +60,10 @@ class CatImageController {
     try {
 
       const { name } = req.body;
+      const { user_id } = req.user;
       const { originalname, size } = req.file;
       const client = await pool.connect();
-      const { rows }  = await client.query(uploadImage, [name, originalname, size]);
+      const { rows }  = await client.query(uploadImage, [name, originalname, size, user_id]);
       const [ image ] = rows;
 
       client.release();
@@ -84,15 +86,16 @@ class CatImageController {
 
       const { name } = req.body;
       const { id } = req.params;
+      const { user_id } = req.user;
       const { originalname, size } = req.file;
       const client = await pool.connect();
 
-      const { rows: existingImage }  = await client.query(getCatImageById, [id]);
+      const { rows: existingImage }  = await client.query(getCatImageById, [id, user_id]);
       const [ oldImage ] = existingImage;
 
       fs.unlinkSync(`./images/${oldImage.image}`)
 
-      const { rows }  = await client.query(updateImage, [id, name, originalname, size]);
+      const { rows }  = await client.query(updateImage, [id, name, originalname, size, user_id]);
       const [ image ] = rows;
 
       client.release();
@@ -112,22 +115,20 @@ class CatImageController {
 
   public async deleteImage(req, res) {
     try {
-
       const { id } = req.params;
+      const { user_id } = req.user;
       const client = await pool.connect();
-      const { rows }  = await client.query(getCatImageById, [id]);
+      const { rows }  = await client.query(getCatImageById, [id, user_id]);
       const [ image ] = rows;
 
-
-
-      if (image.length > 0) {
+      if (image) {
         fs.unlinkSync(`./images/${image.image}`)
-        await client.query(deleteImage, [id]);
+        await client.query(deleteImage, [id, user_id]);
         client.release();
 
-        res.status(200).json({
+        res.status(204).json({
           request: {
-            type: 'PUT',
+            type: 'DELETE',
             url: `http://localhost:4000/cats/${id}`
           },
           message: 'Image removed'

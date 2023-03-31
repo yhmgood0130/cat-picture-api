@@ -1,10 +1,9 @@
 import express, { Application, Router } from 'express';
 import bodyParser from 'body-parser';
-// import authRouter from './routers/AuthRouter';
+import authRouter from './routers/AuthRouter';
 import catImageRouter from './routers/CatImageRouter';
-// import imageRouter from './routers/ImageRouter';
 import pool from './db/dbconnector';
-// import { token } from './utils/auth';
+import { token } from './utils/auth';
 
 class Server {
   private app;
@@ -30,8 +29,8 @@ class Server {
 
   private routerConfig() {
     this.app.use('/images', express.static('images'))
-    this.app.use('/', catImageRouter);
-    // this.app.use('/auth', token, authRouter);
+    this.app.use('/', token, catImageRouter);
+    this.app.use('/auth', token, authRouter);
   }
 
   public start = (port: number) => {

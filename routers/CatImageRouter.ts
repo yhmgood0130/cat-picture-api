@@ -1,7 +1,7 @@
 import express, { Router } from 'express';
 import CatImageController from '../controllers/CatImageController';
 import multer from 'multer';
-// import { authorize, authorizeAccount } from '../utils/auth';
+import { authorize } from '../utils/auth';
 
 const storage = multer.diskStorage({
   destination: function(req, file, cb) {
@@ -32,10 +32,10 @@ const upload = multer({
 const router = Router();
 const catImageController = new CatImageController();
 
-router.post('/cats', upload.single('image'), catImageController.uploadImage);
-router.get('/cats/:id', catImageController.getById);
+router.post('/cats', upload.single('image'), authorize, catImageController.uploadImage);
 router.get('/cats', catImageController.getAll);
-router.put('/cats/:id', upload.single('image'), catImageController.updateImage);
-router.delete('/cats/:id', catImageController.deleteImage);
+router.get('/cats/:id', authorize, catImageController.getById);
+router.put('/cats/:id', upload.single('image'), authorize, catImageController.updateImage);
+router.delete('/cats/:id', authorize, catImageController.deleteImage);
 
 export default router;
