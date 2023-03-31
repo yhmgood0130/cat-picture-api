@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "120ece53-a8b7-4908-8583-703b3931ab47",
+		"_postman_id": "3a3b2724-b311-4754-a8b6-bd6622f98038",
 		"name": "Cat Pictuer API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "2228162"
@@ -140,7 +140,7 @@
 						{
 							"key": "image",
 							"type": "file",
-							"src": "/C:/Users/Hopper/Pictures/Screenshots/Screenshot_20230209_090608.png"
+							"src": "/C:/Users/Hopper/Pictures/Screenshots/Screenshot_20230101_110217.png"
 						}
 					]
 				},
@@ -176,6 +176,16 @@
 				"disableBodyPruning": true
 			},
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "{{cat_token}}",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"body": {
@@ -278,14 +288,14 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:4000/transactions",
+					"raw": "http://localhost:4000/cats",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
 					"port": "4000",
 					"path": [
-						"transactions"
+						"cats"
 					]
 				}
 			},
@@ -320,13 +330,19 @@
 				"method": "PUT",
 				"header": [],
 				"body": {
-					"mode": "raw",
-					"raw": "",
-					"options": {
-						"raw": {
-							"language": "json"
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "name",
+							"value": "updatedCat",
+							"type": "text"
+						},
+						{
+							"key": "image",
+							"type": "file",
+							"src": "/C:/Users/Hopper/Pictures/Screenshots/Screenshot_20230209_090608.png"
 						}
-					}
+					]
 				},
 				"url": {
 					"raw": "http://localhost:4000/cats/{{cat_id}}",
@@ -393,14 +409,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:4000/cats/{{catId}}",
+					"raw": "localhost:4000/cats/{{cat_id}}",
 					"host": [
 						"localhost"
 					],
 					"port": "4000",
 					"path": [
 						"cats",
-						"{{catId}}"
+						"{{cat_id}}"
 					],
 					"query": [
 						{
